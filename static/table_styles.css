@@ -1,0 +1,71 @@
+/* Table Container Styling */
+#tableContainer {
+    text-align: center;
+    margin: 20px auto;
+    width: 100%;
+    background-color: linear-gradient(135deg, #e0f2f1, #b2dfdb); /* Soft teal gradient */
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styling */
+table {
+    border-collapse: collapse;
+    width: 70%;
+    margin: 20px auto;
+    table-layout: fixed;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #e0f2f1; /* Background teal color to align with body */
+}
+
+th, td {
+    padding: 12px 20px;
+    border: 0px; /* Darker teal for border */
+    text-align: center;
+    color: #004d40; /* Darker teal for text */
+}
+
+th {
+    background-color: #009688; /* Teal header background */
+    color: white;
+    font-size: 1.2em;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+tr:nth-child(even) {
+    background-color: #b2dfdb; /* Light teal for even rows */
+}
+
+tr:hover {
+    background-color: #a7c9c9; /* Slightly darker teal on hover */
+}
+
+/* Table Labels */
+.table-label {
+    text-align: center;
+    font-size: 1.6em;
+    color: #004d40;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Action Button Styling */
+.actionButton {
+    display: inline-block;
+    padding: 0;
+    background-color: #009688;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.actionButton:hover {
+    background-color: #00796b;
+    transform: scale(1.05);
+}

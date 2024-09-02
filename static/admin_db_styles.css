@@ -1,0 +1,27 @@
+@import url('researcher_db_styles.css')
+
+/* Set a smaller width for the last column */
+th:nth-child(13),
+td:nth-child(13) {
+    width: 10%; /* Adjust this width as needed */
+}
+
+/* 9. Submit Button Styling */
+#editorButton{
+    display: block;
+    width: 20px;
+    margin: 0px auto;
+    padding: 0px;
+    background-color: #009688; /* Teal background */
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s; /* Transition for hover effect */
+}
+
+#editorButton:hover {
+    background-color: #00796b; /* Darker teal on hover */
+    transform: scale(1.05); /* Slight scale effect on hover */
+}

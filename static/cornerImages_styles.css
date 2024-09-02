@@ -1,0 +1,19 @@
+#cornerImages {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+#cornerImages img {
+    width: 120px;
+    height: 140px;
+    border-radius: 15px; /* Increased border-radius for softer edges */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added soft shadow */
+    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+#cornerImages img:hover {
+    transform: scale(1.05); /* Slightly enlarge image on hover */
+}

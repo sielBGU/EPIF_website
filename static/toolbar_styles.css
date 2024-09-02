@@ -1,0 +1,77 @@
+#toolbarContainer {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 10000; /* Ensure the toolbar appears over all other elements */
+    box-shadow: -6px 0 15px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+    border-radius: 15px 0 0 15px; /* Rounded corners on the left side */
+}
+
+#toggleToolbar {
+    position: absolute;
+    left: -40px; /* More space for button visibility */
+    width: 40px;
+    height: 40px;
+    background-color: #009688; /* Teal for a fresh look */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circular button */
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Add shadow to button */
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#toggleToolbar:hover {
+    background-color: #00796b; /* Darker teal on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5); /* Deeper shadow on hover */
+}
+
+#toolbarButtons {
+    width: 200px;
+    background-color: #ffffff; /* Light background for contrast */
+    padding: 10px;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    transition: margin-right 0.3s ease;
+    border-radius: 15px 0 0 15px; /* Rounded corners on the left side */
+    border: 1px solid #e0e0e0; /* Light border for definition */
+}
+
+#toolbarButtons.open {
+    margin-right: 0; /* Open toolbar */
+}
+
+#toolbarButtons button {
+    display: block;
+    width: 180px;
+    margin: 10px 0;
+    padding: 12px;
+    background-color: #009688; /* Matching button color */
+    color: white;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+}
+
+#toolbarButtons button:hover {
+    background-color: #00796b; /* Darker shade on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+}
+
+#toolbarButtons .disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/admin_db_styles.css">
+    <title>EPIF Database</title>
+</head>
+<body>
+    {% extends 'researcher_db_page.html' %}
+    {% include 'toolbar.html' %}
+    {% block logout_button %}{% endblock %}
+    {% block editor_column %}
+        <th> Edit </th>
+    {% endblock %}
+    {% block editor_row_actions %}
+        <td><button id="editorButton" onclick="editRow(this)">📝</button></td>
+    {% endblock %}
+
+</body>
+</html>
