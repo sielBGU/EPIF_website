@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    {% extends 'edit_entry.html' %}
+    {% block initForm%}
+        <form id="AddForm" action="/access/{{session.user_role}}/AddEntry/submit" method="post">
+    {% endblock %}
+
+    {% block edit_button %} Add {% endblock %}
+    {% block edit_hello %} Add {% endblock %}
+</body>
+</html>

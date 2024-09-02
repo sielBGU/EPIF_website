@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/toolbar_styles.css">
+</head>
+<body>
+    <!-- Logout and Buttons Section -->
+    <div id="toolbarContainer">
+        <button id="toggleToolbar">≡</button> <!-- Smaller button on the left to toggle toolbar -->
+        <div id="toolbarButtons">
+            <button id="logoutButton">Logout</button>
+            <button id="manageUsersButton">Manage Users</button>
+            <button id="AddEntryButton">Add Entry to Database</button>
+            <button id="returnHomepageButton">Return to Homepage</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var currentUrl = window.location.href;
+            var manageUsersButton = document.getElementById('manageUsersButton');
+            var AddEntryButton = document.getElementById('AddEntryButton');
+            var returnHomepageButton = document.getElementById('returnHomepageButton');
+            var AdminURL = 'http://127.0.0.1:5000/access/Admin';
+            var toolbar = document.getElementById('toolbarButtons');
+            var toggleButton = document.getElementById('toggleToolbar');
+
+            toolbar.style.marginRight = toolbar.classList.contains('open') ? '0' : '-300px';
+
+            // Set button actions
+            document.getElementById('logoutButton').addEventListener('click', function() {
+                window.location.href = '/logout';
+            });
+
+            // Disable "Return to Homepage" button if on "/access/Admin"
+            if (currentUrl === AdminURL) {
+                returnHomepageButton.classList.add('disabled');
+                returnHomepageButton.disabled = true;
+            }
+            document.getElementById('returnHomepageButton').addEventListener('click', function() {
+                if (!this.disabled) {
+                    window.location.href = AdminURL;
+                }
+            });
+
+            // Disable "Manage Users" button if on "/manage_users"
+            if (currentUrl.includes('/manage_users')) {
+                manageUsersButton.classList.add('disabled');
+                manageUsersButton.disabled = true;
+            }
+
+            document.getElementById('manageUsersButton').addEventListener('click', function() {
+                if (!this.disabled) {
+                    window.location.href = AdminURL + '/manage_users';
+                }
+            });
+
+            // Disable "Add Entry to Database" button if on "/AddEntry"
+            if (currentUrl.includes('/AddEntry')) {
+                AddEntryButton.classList.add('disabled');
+                AddEntryButton.disabled = true;
+            }
+
+            document.getElementById('AddEntryButton').addEventListener('click', function() {
+                if (!this.disabled) {
+                    window.location.href = AdminURL + '/AddEntry';
+                }
+            });
+
+            // Toggle toolbar visibility
+            toggleButton.addEventListener('click', function() {
+                if (toolbar.classList.contains('open')) {
+                    toolbar.classList.remove('open');
+                    toolbar.style.marginRight = '-300px'; // Hide toolbar
+                } else {
+                    toolbar.classList.add('open');
+                    toolbar.style.marginRight = '0'; // Show toolbar
+                }
+            });
+        });
+    </script>
+</body>
+</html>

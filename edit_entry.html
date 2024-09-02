@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPIF Database</title>
+    <link rel="stylesheet" href="/static/edit_entry_styles.css">
+</head>
+<body>
+
+{% include 'cornerImages.html' %}
+{% include 'toolbar.html' %}
+
+
+<h1>Hello {{session.username}}[{{session.user_role}}],<br>
+        {% block edit_hello %} Edit {% endblock %}
+        a query result</h1>
+
+{% block initForm %}
+<form id="EditForm" action="/access/{{session.user_role}}/EditEntry/submit" method="post">
+{% endblock %}
+    <div id="tableContainer">
+    <table>
+    <thead>
+        <tr>
+            <th>Filter</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for query_key in query_keys %}
+        {% set index = loop.index0 %}
+        <tr>
+            <td>{{ query_key }}</td>
+            <td>
+                {% if query_key == 'Date' %}
+                    <input type="date" id="startDateEditor" value="{{ row_data[index] }}">
+                {% elif query_key == 'Place' %}
+                    <input type="text" value="{{ row_data[index] }}">
+                {% elif query_key == 'Frequency Band' %}
+                    <div class="dropdown-content">
+                        <label><input type="checkbox" value="C"> C</label>
+                        <label><input type="checkbox" value="L"> L</label>
+                        <label><input type="checkbox" value="X"> X</label>
+                    </div>
+                {% elif query_key == 'Satellite' %}
+                    <select>
+                        <option value="Sir-c">Sir-c</option>
+                        <option value="X-Sar">X-Sar</option>
+                        <option value="Landsat4">Landsat 4</option>
+                        <option value="Landsat5">Landsat 5</option>
+                        <option value="Landsat7">Landsat 7</option>
+                        <option value="Corona">Corona</option>
+                    </select>
+                {% elif query_key == 'Sensor' %}
+                    <select>
+                        <option value="TM">TM</option>
+                        <option value="Aerial Imagery">Aerial Imagery</option>
+                        <option value="Radar Imagery">Radar Imagery</option>
+                    </select>
+                {% elif query_key == 'Keywords' %}
+                    <input type="text" value="{{ row_data[index] }}">
+                {% else %}
+                    update_link: {{ row_data[index] }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<div>
+    <button type="submit">Submit {% block edit_button %}Edit{% endblock %}</button>
+</div>
+</form>
+
+
+</body>
+</html>

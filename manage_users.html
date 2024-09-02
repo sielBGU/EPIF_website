@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPIF Database</title>
+    <link rel="stylesheet" href="/static/manage_users_styles.css">
+</head>
+<body>
+    {% include 'cornerImages.html' %}
+    {% include 'toolbar.html' %}
+
+    <h1>Hello {{session.username}} [{{session.user_role}}],<br>
+        Manage New User Requests!
+    </h1>
+
+    <div id="tableContainer">
+        {% if message %}
+            <p>{{ message }}</p>
+        {% else %}
+            <form action="/access/{{ session.user_role }}/manage_users" method="post">
+                <!-- Label for Pending Users Table -->
+                <div class="table-label">Pending User Requests</div>
+
+                <!-- Table for approving or denying users -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Choose User's Role</th>
+                            <th>Approve/Deny</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in user_requests[1] %}
+                            <tr>
+                                <td>{{ user }}</td>
+                                <td>
+                                    <select name="new_user_role_{{ user }}">
+                                        <option value="Admin">Admin</option>
+                                        <option value="Researcher">Researcher</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="submit" class="actionButton" name="action" value="approve_{{ user }}">✅</button>
+                                    <button type="submit" class="actionButton" name="action" value="deny_{{ user }}">❌</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Label for Existing Users Table -->
+                <div class="table-label">Manage Existing Users</div>
+
+                <!-- Table for managing existing users' roles -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>User's Role</th>
+                            <th>Save Role</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in user_requests[0] %}
+                            <tr>
+                                <td>{{ user }}</td>
+                                <td>
+                                    <select name="new_user_role">
+                                        <option value="Admin" {{ user_roles[user].admin_selected }}>Admin</option>
+                                        <option value="Researcher" {{ user_roles[user].researcher_selected }}>Researcher</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <!-- Save Button -->
+                                    <button type="submit" class="actionButton" name="action" value="save_{{ user }}">✅</button>
+                                </td>
+                                <td>
+                                    <button type="submit" class="actionButton" name="action" value="delete_{{ user }}">❌</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>

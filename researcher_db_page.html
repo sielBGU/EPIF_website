@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPIF Database</title>
+    <link rel="stylesheet" href="/static/researcher_db_styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+</head>
+<body>
+    {% include 'cornerImages.html' %}
+
+    {% block logout_button %}
+    <form id="logoutForm" action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+    {% endblock %}
+
+    <h1>Hello {{session.username}}[{{session.user_role}}],<br>
+        Welcome To EPIF's Imagery Database!</h1>
+    <form id="filterForm1" action="/access/{{session.user_role}}/submit#tableContainer" method="post">
+        <!-- Filter 1 -->
+        <div class="filter-group">
+            <div class="filter-label">
+                <h2>Frequency Band</h2>
+            </div>
+            <div class="filter-content">
+                <div class="filter-options">
+                    <label><input type="checkbox" name="FreqBandFilter" value="C"> C</label>
+                    <label><input type="checkbox" name="FreqBandFilter" value="L"> L</label>
+                    <label><input type="checkbox" name="FreqBandFilter" value="X"> X</label>
+                </div>
+                <div class="side-image">
+                    <img src="/static/images/freqBands_icon.png" alt="freqbands">
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter 2 -->
+        <div class="filter-group">
+            <div class="filter-label">
+                <h2>Satellite</h2>
+            </div>
+            <div class="filter-content">
+                <div class="filter-options">
+                    <label><input type="radio" name="SatelliteFilter" value="Sir-c" onclick="toggleRadio(this)"> Sir-c</label>
+                    <label><input type="radio" name="SatelliteFilter" value="X-Sar" onclick="toggleRadio(this)"> X-Sar</label>
+                    <label><input type="radio" name="SatelliteFilter" value="Landsat4" onclick="toggleRadio(this)"> Landsat 4</label>
+                    <label><input type="radio" name="SatelliteFilter" value="Landsat5" onclick="toggleRadio(this)"> Landsat 5</label>
+                    <label><input type="radio" name="SatelliteFilter" value="Landsat7" onclick="toggleRadio(this)"> Landsat 7</label>
+                    <label><input type="radio" name="SatelliteFilter" value="Corona" onclick="toggleRadio(this)"> Corona</label>
+                </div>
+                <div class="side-image">
+                    <img src="/static/images/satellite_icon.png" alt="Satellite">
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter 3 -->
+        <div class="filter-group">
+            <div class="filter-label">
+                <h2>Sensor</h2>
+            </div>
+            <div class="filter-content">
+                <div class="filter-options">
+                    <label><input type="radio" name="SensorFilter" value="TM" onclick="toggleRadio(this)"> TM </label>
+                    <label><input type="radio" name="SensorFilter" value="Aerial Imagery" onclick="toggleRadio(this)"> Aerial Imagery </label>
+                    <label><input type="radio" name="SensorFilter" value="Radar Imagery" onclick="toggleRadio(this)"> Radar Imagery</label>
+                </div>
+                <div class="side-image">
+                    <img src="/static/images/sensor_icon.png" alt="Sensor">
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter 4 -->
+        <div class="filter-group">
+            <div class="filter-label">
+                <h2>Date</h2>
+            </div>
+            <div class="filter-content">
+                <div class="filter-options">
+                    <label for="startDateFilter">Start Date:</label>
+                    <input type="date" id="startDateFilter" name="startDateFilter">
+                    <label for="endDateFilter">End Date:</label>
+                    <input type="date" id="endDateFilter" name="endDateFilter">
+                </div>
+                <div class="side-image">
+                    <img src="/static/images/calendar_icon.png" alt="calendar">
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="GeoZoneFilter" id="geoZoneInput">
+        <div id="GeoZoneFilter"></div>
+
+        <button type="submit">Submit</button>
+
+    </form>
+
+    <div id="tableContainer">
+        {% if message %}
+            <p>{{ message }}</p>
+        {% else %}
+            <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                {% for query_key in query_keys %}
+                    <th>{{ query_key }}</th>
+                {% endfor %}
+                {% block editor_column %}
+                {% endblock %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for query_result in query_results %}
+            <tr>
+                <td>{{ loop.index }}</td>
+
+                {% for info in query_result %}
+
+                <td>
+                    {% if not info %}
+                        N/A
+                    {% elif ":\\" not in info %}
+                        {{ info }}
+                    {% else %}
+                        <a href="{{ info }}">link</a>
+                    {% endif %}
+                </td>
+
+                {% endfor %}
+                {% block editor_row_actions %}
+                {% endblock %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    <script>
+        let lastRadio = null;
+
+        function toggleRadio(radio) {
+            if (lastRadio === radio) {
+                radio.checked = false;
+                lastRadio = null;
+            } else {
+                lastRadio = radio;
+            }
+        }
+    </script>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+<script>
+            // First, check if geo_dict exists and is not None
+    {% if geo_dict %}
+        var geoDict = {{ geo_dict|tojson }};
+    {% else %}
+        var geoDict = {};
+    {% endif %}
+
+    // Initialize the Leaflet map
+    var map = L.map('GeoZoneFilter').setView([20, 0], 2); // Center the map at a global view
+
+    // Add a tile layer (you can choose different map styles)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+    }).addTo(map);
+
+    // Disable scroll wheel zoom initially
+    map.scrollWheelZoom.disable();
+
+    // Detect when the 'Ctrl' key is pressed or released
+    document.addEventListener('keydown', function (event) {
+        if (event.ctrlKey) {
+            map.scrollWheelZoom.enable();
+        }
+    });
+
+    document.addEventListener('keyup', function (event) {
+        if (!event.ctrlKey) {
+            map.scrollWheelZoom.disable();
+        }
+    });
+
+    // Use marker clustering to avoid duplicate locations
+    var markers = L.markerClusterGroup();
+
+    // Iterate over the geo_dict and add markers to the map
+    for (let geoZone in geoDict) {
+        let latLng = geoDict[geoZone];
+        let marker = L.marker([latLng[0], latLng[1]]);
+        marker.bindPopup(geoZone);
+
+        marker.on('click', function () {
+            document.getElementById('geoZoneInput').value = geoZone;
+        });
+
+        markers.addLayer(marker);
+    }
+
+    map.addLayer(markers);
+</script>
+
+<script>
+function editRow(editButton) {
+    console.log('hola');
+    const row = editButton.closest('tr');
+
+    // Get all the cells in the row
+    const cells = row.querySelectorAll('td');
+
+    // Extract values from the cells
+    var rowValues = Array.from(cells).slice(1, -1);
+    rowValues = rowValues.map(cell => cell.textContent.trim());
+
+    // Log the extracted values to check
+    console.log('handled');
+    console.log(rowValues);
+
+    // Convert the array of row values to a URL parameter
+    const queryParams = new URLSearchParams();
+    queryParams.append('rowData', JSON.stringify(rowValues));  // Send as JSON string
+
+    // Redirect to the new page with row data
+    window.location.href = `/access/Admin/EditEntry?${queryParams.toString()}`;
+}
+</script>
+
+
+</body>
+</html>
